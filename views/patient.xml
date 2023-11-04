@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hospital_pateint_form" model="ir.ui.view">
+        <field name="name">hospital.pateint.form</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- Your form view definition goes here -->
+                <!-- the name between the quets is must be the same in moudele name field -->
+                <sheet>
+                <div>
+                <h1 class="ot-title">
+                <field name="ref" readonly="1"/>
+                </h1>
+                </div>
+                    <group>
+                            <field name="name"/>
+                            <field name="age"/>
+                            <field name="gender"/>
+                            <field name="doctor_id" options="{'no_open': True, 'no_create': True}"/> 
+                            <field name="is_child"/>
+                            <field name="captalized_name"/>
+                            <field name="tags_ids" widget="many2many_tags"/>
+                            <field name="notes"/>
+                    </group>
+                </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                       <!--<field name="activity_ids"/>--> 
+                        <field name="message_ids" options="{'post_refresh': 'recipients'}"/> 
+                    </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_hospital_pateint_tree" model="ir.ui.view">
+        <field name="name">hospital.pateint.tree</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <tree>
+                <!-- Your tree view definition goes here -->
+                <field name="ref"/>
+                <field name="name"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="doctor_id"/> 
+                <field name="is_child"/>
+                <field name="captalized_name"/>
+                <field name="notes"/>
+                <!-- <field name="notes"/> -->
+                
+            </tree>
+        </field>
+    </record>
+
+
+        <record id="view_hospital_pateint_search" model="ir.ui.view">
+        <field name="name">hospital.pateint.search</field>
+        <field name="model">hospital.patient</field>
+        <field name="arch" type="xml">
+            <search>
+                <!-- search based on -->
+                <!-- to mix the name and ref field -->
+                <field name="name" filter_domain ="['|',('name' ,'ilike',self),('ref' , 'ilike',self)]"/>
+                <field name="age"/>
+                <field name="gender"/> 
+                <field name="doctor_id"/> 
+                <filter string="Male" name="filter_mal" domain="[('gender', '=', 'male')]"/>
+                <filter string="Female" name="filter_fmal" domain="[('gender', '=', 'female')]"/>
+                <filter string="Othor" name="filter_othor" domain="[('gender', '=', 'othor')]"/>
+                <separator/>
+                <filter string="is_child" name="filter_othor" domain="[('is_child', '=', True)]"/>
+                <group expand="0" string="Group By">
+                    <filter string="Gender" name="group_by_gender"  context="{'group_by':'gender'}"/>
+                </group>
+                <group expand="0" string="Group By">
+                    <filter string="is_child" name="group_by_is_child"  context="{'group_by':'is_child'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_hospital_pateint" model="ir.actions.act_window">
+        <field name="name">Patients</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hospital.patient</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="hosptial.view_hospital_pateint_search"/>
+    </record>
+
+    <menuitem id="menu_hosptial_patient" name="Patient" parent="menu_hosptial_oprtion" action="action_hospital_pateint" sequence="10"/>
+</odoo>
